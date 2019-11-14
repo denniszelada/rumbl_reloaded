@@ -4,6 +4,8 @@ defmodule RumblWeb.UserController do
   alias Rumbl.Accounts
   alias Rumbl.Accounts.User
 
+  plug :authenticate when action in [:index, :show]
+
   def new(conn, _params) do
     changeset = Accounts.change_registration(%User{}, %{})
     render(conn, "new.html", changeset: changeset)
@@ -13,6 +15,7 @@ defmodule RumblWeb.UserController do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
         conn
+        |> RumblWeb.Auth.login(user)
         |> put_flash(:info, "#{user.name} created!")
         |> redirect(to: Routes.user_path(conn, :index))
 
@@ -32,4 +35,14 @@ defmodule RumblWeb.UserController do
     render(conn, "show.html", user: user)
   end
 
+  defp authenticate(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page")
+      |> redirect(to: Routes.page_path(conn, :index))
+      |> halt()
+    end
+  end
 end
