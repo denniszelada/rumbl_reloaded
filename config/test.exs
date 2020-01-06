@@ -1,5 +1,6 @@
 use Mix.Config
 
+config :pbkdf2_elixir, :round, 1
 # Configure your database
 config :rumbl, Rumbl.Repo,
   username: "postgres",
