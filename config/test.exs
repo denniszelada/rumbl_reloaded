@@ -1,9 +1,10 @@
 use Mix.Config
 
+config :pbkdf2_elixir, :round, 1
 # Configure your database
 config :rumbl, Rumbl.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "samedi99",
   database: "rumbl_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
